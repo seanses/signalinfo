@@ -1,0 +1,215 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+#container{height:500px;width:1200px;float:left;}
+</style>
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/Highcharts-3.0.7/js/highcharts.js"></script>
+<title>chart</title>
+</head>
+<body>
+<div id="container"></div>
+</body>
+</html>
+<script type="text/javascript">
+$(function(){
+var chartdata = $("#chartdata",parent.document).val();
+var okdata = JSON.parse(chartdata);
+	$('#container').highcharts({
+		chart: {
+		},
+		title: {
+			text: 'Channel Quality Info'
+		},
+		xAxis: {
+			
+		},
+		yAxis: [{
+			labels: {
+                format: '{value} dB',
+                style: {
+                    color: '#89A54E'
+                }
+            },
+			title: {
+				text: 'SINR\RSRP',
+				style: {
+                    color: '#89A54E'
+                }
+			},
+		},{
+            labels: {
+                format: '{value} Kbps',
+                style: {
+                    color: '#4572A7'
+                }
+            },
+			title: {
+                text: 'Throughput DL',
+                style: {
+                    color: '#4572A7'
+                }
+            },
+            opposite: true
+		}],
+		/*plotOptions: {
+            series: {
+                marker: {
+                    enabled: false
+                }
+            }
+        },*/
+		tooltip: {
+            shared: true,
+        },
+		series: [{
+			type: 'line',
+			name: 'SINR 平均值',
+			data: okdata[0],
+			tooltip: {
+                valueSuffix: ' dB'
+            }
+		},{
+			type: 'line',
+			name: 'SINR 方差',
+			data: okdata[1],
+			tooltip: {
+                valueSuffix: ' dB'
+            }
+		},{
+			type: 'scatter',
+			name: 'SINR 散点',
+			data: okdata[2],
+			marker: {
+				radius: 4
+			},
+			tooltip: {
+                valueSuffix: ' dB'
+            }
+		},{
+			type: 'line',
+			name: 'RSRP 平均值',
+			data: okdata[3],
+			tooltip: {
+                valueSuffix: ' dB'
+            }
+		},{
+			type: 'line',
+			name: 'RSRP 方差',
+			data: okdata[4],
+			tooltip: {
+                valueSuffix: ' dB'
+            }
+		},{
+			type: 'scatter',
+			name: 'RSRP 散点',
+			data: okdata[5],
+			marker: {
+				radius: 4
+			},
+			tooltip: {
+                valueSuffix: ' dB'
+            }
+		},{
+			type: 'line',
+			name: 'PDCP_Throughput_DL 平均值',
+			data: okdata[6],
+			yAxis: 1,
+			tooltip: {
+                valueSuffix: ' Kbps'
+            }
+		},{
+			type: 'line',
+			name: 'PDCP_Throughput_DL 方差',
+			data: okdata[7],
+			yAxis: 1,
+			tooltip: {
+                valueSuffix: ' Kbps'
+            }
+		},{
+			type: 'scatter',
+			name: 'PDCP_Throughput_DL 散点',
+			data: okdata[8],
+			yAxis: 1,
+			marker: {
+				radius: 4
+			},
+			tooltip: {
+                valueSuffix: ' Kbps'
+            }
+		}]
+	});
+	
+	var chart = $('#container').highcharts();
+	//for(int i=0;i<5;i++)
+	//	chart.series[i].hide();
+	/*function Band(from,to,pci){
+		this.from = from;
+		this.to = to;
+		this.pci = pci;
+	}
+	var bands = [];
+	var dit1,dit2,pci;
+	for(var i=0;i<okdata[0].length;i++){
+		if(okdata[0][i].extra!=pci){
+			bands.push(new Band(dit1,dit2,pci));
+			dit1 = dit2 = okdata[0][i].x;
+			pci = okdata[0][i].extra;
+		}else{
+			dit2 = okdata[0][i].x;
+		}
+	}
+	bands.push(new Band(dit1,dit2,pci));
+	bands.shift();
+	for(var i=0;i<bands.length;i++){
+		alert(bands[i].from+' '+bands[i].to+' '+bands[i].pci);
+	}
+	for(var i=0;i<bands.length;i++){
+		if(i%2){
+			chart.xAxis[0].addPlotBand({
+						from: bands[i].from,
+						to: bands[i].to,
+						color: '#FCFFC5',
+						label:{
+							text: bands[i].pci
+						}
+			});
+		}
+		else{
+			chart.xAxis[0].addPlotBand({
+						from: bands[i].from,
+						to: bands[i].to,
+						color: '#F0F8FF',
+						label:{
+							text: bands[i].pci
+						}
+			});
+		}
+	}*/
+	okdata[9].shift();
+	for(var i=0;i<okdata[9].length;i++){
+		if(i%2){
+			chart.xAxis[0].addPlotBand({
+						from: okdata[9][i].from,
+						to: okdata[9][i].to,
+						color: '#FCFFC5',
+						label:{
+							text: okdata[9][i].pci
+						}
+			});
+		}
+		else{
+			chart.xAxis[0].addPlotBand({
+						from: okdata[9][i].from,
+						to: okdata[9][i].to,
+						color: '#F0F8FF',
+						label:{
+							text: okdata[9][i].pci
+						}
+			});
+		}
+	}
+});
+</script>

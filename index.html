@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>信道环境测量演示系统</title>
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/jquery.fancybox.pack.js"></script>
+
+
+<style type="text/css">
+
+
+body{font-family:Arial,Verdana,sana-serif;
+     background-color:#ffffff;
+     color:#665544;
+     font-size:1.5em;
+     margin:0px;
+	}
+
+	
+table{background-color:#FFF8DC;}
+	 
+#header{background-image: url("http://www.htmlandcssbook.com/code-samples/chapter-16/images/header.gif");
+				background-repeat: repeat-x;
+				color: white;
+				height:100px;
+				margin:0px 10px;}
+				
+h1{font-weight:900;
+  font-size:1.5em;
+  text-align:center;
+  margin:0px 10px 10px 10px;
+
+  }		
+#head ul{background-color:#D3D3D3;
+    text-align:center;
+     padding:2px; /*横向条的宽度*/
+	 margin:5px;
+	border-radius:10px;
+	}	
+#head li{display:inline; 
+           padding:10px;
+	}
+	
+/********************************************************************/			
+			
+#web{ 
+         margin:0px;
+         padding:10px;
+		 padding-top:0px;
+		 width:100%;	
+		}
+		 
+.text{font-size:1em;
+	  border-radius:5px;
+	  margin:5px 0px;
+	  }
+
+.submit{        
+				color: #ffffff;
+				background-color: #665544;
+				border: none;
+				border-radius:5px;
+				width: 150px;
+				font-size:1em;
+				text-align:center;}
+/*input#search*/
+input.submit:hover {
+				color: #665544;
+				background-color:#ADD8E6;}
+
+
+         
+legend {
+				border-radius:10px;
+	            background-color:#efefef;
+				border: 1px solid #dcdcdc;
+				padding: 5px 10px;}
+#select{font-size:1em;
+        margin:10px;}
+
+		
+#map{ background-color:#D3D3D3;
+      margin:10px;
+      padding:10px;
+	  border-radius:5px;}
+
+	  
+/************************************************/
+		
+#content{
+	     background-color:#D3D3D3;
+	     margin-top:10px;
+         border-radius:5px;
+		 padding:10px;
+         width:210px;
+		 }
+ 
+/************************************************/
+#footer{background-image:url("http://www.htmlandcssbook.com/code-samples/chapter-16/images/pattern.gif");
+        color:white;
+		font-size:1em;
+		text-align:center;
+	    border-radius:10px;
+		margin:5px 10px 5px 10px;
+		height:1em;
+		}
+
+</style>
+</head>
+
+<body>
+
+<!----------------------------------------------------------------------------------------->
+<div id="page" align="center">
+<table width="100%">
+ <tr>
+  <td colspan="3">
+  <div id="header">
+<h1>
+<!-- <img src="huawei.jpg" alt="HuaWei" width="80" height="80" border="0" align="absmiddle"  > -->
+  The Presentation System Of Channel Environment </h1>
+  </div>
+  </td>
+  </tr>
+  <tr>
+  <td colspan="3" id="head">
+  <ul>
+   <li><a href="original_data_import_form.php">上传数据</a></li>
+   <li><a href="upload_signal_path_form.php">查看单表</a></li>
+   <li><a href="">帮助</a></li>
+   <li><a href="">联系我们</a></li>
+   </ul>
+  </td>
+  </tr>
+   <tr>
+ 
+
+ <!-- <td rowspan="2" >
+  <div id="sidebar">
+
+<ul>
+功能列表
+<li><a href="" title="">查询某点信道质量</a></li><br />
+  <li><a href="" title="">查询路径信道质量</a></li><br />
+  <li><a href="" title="">数据库形成过程演示</a></li><br />
+  <li><a href="" title="">更多功能</a></li><br />
+  </ul>
+</div> 
+   
+   </td>  -->
+
+
+    <td colspan="2" align="justify">
+<div id="web" >
+搜索位置区域：
+  <input name="range" type="text" class="text" size="50"/>
+<input type="submit" name="search" value="Search" id="search" class="submit" />
+ <input type="button"  value="显示SINR图" class="submit" id="one" style="float: right" onclick='window.frames["mapframe"].openchartcallback();'/>
+</div>
+    </td>
+   </tr>
+   <tr>
+<!-- <td valign="top" >
+<div id="content" >
+ <fieldset>
+ <legend>Location</legend>
+ <label>From:<br />
+      <input name="start" type="text" class="text" size="10"/></label><br />
+ 
+ <label>To:<br />
+      <input name="end" type="text" class="text" size="10" /></label><br />
+    信道指标显示：     
+      <select name="parameter" id="select">
+  <option value="SINR">SINR </option>
+  <option value="RSRP">RSRP </option>
+  <option value="RSSI">RSSI </option>
+  <option value="PCI">PCI </option>
+  <option value="CQI">CQI </option>
+ </select><br />
+      <input type="button"  value="显示SINR图" class="submit" id="one" onclick='window.frames["mapframe"].openchartcallback();'/>
+      <input type="reset"  value="清空内容" class="submit"/>
+     
+
+ </fieldset>
+ </div>
+ <div id="little">
+ 
+ 
+ </div>
+ </td> -->
+      <td valign="top">
+      <div id="map">
+      <iframe id="mapframe" src="map1.html" height="600" width="100%" frameborder="1" scrolling="no"></iframe>
+ </div>
+ </td>
+    </tr>
+    <tr>
+    <td colspan="3" align="center" >
+    <div id="footer">
+    HuaWei--the presentation system of channel  environment 
+    </div>
+    </td>
+    </tr>
+ </table>
+</div>
+
+<!--<div id="footer">
+<p>HuaWei--the presentation system of channel condition </p>
+</div>
+-->
+
+</body>
+</html>
+
+ <script type="text/javascript">
+ 
+function openchartcallback(){
+	$.fancybox({
+		type: 'iframe',
+		href: 'chart.html',
+		closeBtn: true,	
+		'autoDimensions'	: false,
+		'width'         		: 1200,
+		'height'        		: 1000,
+		'autoScale' : false
+	});
+}
+ </script>
