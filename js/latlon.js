@@ -40,39 +40,9 @@ LatLon.prototype.distanceTo = function(point) {
   return d;
 }
 
-/**
- * Returns the midpoint between this point and the supplied point.
- * 
- *
- * @param   {LatLon} point: Latitude/longitude of destination point
- * @returns {LatLon} Midpoint between this point and the supplied point
- */
-LatLon.prototype.midpointTo = function(point) {
-  lat1 = this._lat.toRad(), lon1 = this._lon.toRad();
-  lat2 = point._lat.toRad();
-  var dLon = (point._lon-this._lon).toRad();
-
-  var Bx = Math.cos(lat2) * Math.cos(dLon);
-  var By = Math.cos(lat2) * Math.sin(dLon);
-
-  lat3 = Math.atan2(Math.sin(lat1)+Math.sin(lat2),
-                    Math.sqrt( (Math.cos(lat1)+Bx)*(Math.cos(lat1)+Bx) + By*By) );
-  lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
-  lon3 = (lon3+3*Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..+180o
-  
-  return new LatLon(lat3.toDeg(), lon3.toDeg());
-}
-
 /** Converts numeric degrees to radians */
 if (typeof Number.prototype.toRad == 'undefined') {
   Number.prototype.toRad = function() {
     return this * Math.PI / 180;
-  }
-}
-
-/** Converts radians to numeric (signed) degrees */
-if (typeof Number.prototype.toDeg == 'undefined') {
-  Number.prototype.toDeg = function() {
-    return this * 180 / Math.PI;
   }
 }

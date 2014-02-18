@@ -137,7 +137,9 @@ function get_region_data(){
 		$arrayPro[$j] = GetRegion($infos);
 	}
 	return $arrayPro;
-}
+}  
+
+ 
 
 //获得PCI列表
 function get_PCI_list(){
