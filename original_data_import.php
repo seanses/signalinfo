@@ -19,7 +19,7 @@ upload_file('userfile',$uploadFile);
   
   // show what was uploaded
 
-  file_get_contents("http://localhost/signalinfo/CalcAverVari.php");
+  file_get_contents("http://localhost:880/signalinfo/CalcAverVari.php");
 ?>
 </body>
 </html>

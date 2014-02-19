@@ -3,43 +3,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <style type="text/css">
-body,html,#allmap {
-	width: 100%;
-	margin: 0;
-	overflow: hidden
-}
-
-#l-map {
-	height: 100%;
-	width: 100%;
-	float: left;
-	border-right: 2px solid #bcbcbc;
-}
-
-#r-result {
-	height: 600px;
-	width: 21%;
-	float: left;
-}
+body, html,#allmap {width: 100%;margin:0;overflow:hidden}
+#l-map{height:100%;width:100%;float:left;border-right:2px solid #bcbcbc;}
+#r-result{height:600px;width:21%;float:left;}
 </style>
-<link rel="stylesheet" href="css/jquery.fancybox.css" type="text/css"
-	media="screen" />
-<script type="text/javascript"
-	src="http://api.map.baidu.com/api?v=2.0&ak=YCwNZAoPRPGry3Gypi80S1ZL"></script>
-<script type="text/javascript"
-	src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
+<link rel="stylesheet" href="css/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=YCwNZAoPRPGry3Gypi80S1ZL"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
 <script src="js/jquery-1.10.2.min.js"></script>
 <script src="js/latlon.js"></script>
 <script src="js/jquery.fancybox.pack.js"></script>
 <title>index</title>
 </head>
 <body>
-	<div id="l-map"></div>
-	<!-- <div id="r-result" style="overflow:scroll" ></div> -->
-	<div id="data">
-		<input id="chartdata" type="hidden" />
-	</div>
-	<div id="information"></div>
+<div id="l-map"></div>
+<!-- <div id="r-result" style="overflow:scroll" ></div> -->
+<div id="data">
+	<input id="chartdata" type="hidden" />
+</div>
+<div id="information"></div>
 </body>
 
 </html>
@@ -214,20 +196,21 @@ jq(document).ready(function(){
 	    	    }	
 	    });
 		
-	 	 //显示凸包 暂时不显示		 by zyc
-		 jq.getJSON("data_output.php?type=region",function(data){
+		jq.getJSON("data_output.php?type=region",function(data){
     	// 百度地图API功能
+    	var point = new BMap.Point(data.regiondata[1][1].x, data.regiondata[1][1].y);
+    	map.centerAndZoom(point, 17);
+    	var myPoints = [];
         for(var i=0; i<data.regiondata.length; i++){
-        	var myPoints = [];
-            var point_list = data.regiondata[i];        
+            var point_list = data.regiondata[i];
             for(var j=0; j<point_list.length;j++){
            	 	point = new BMap.Point(point_list[j].x, point_list[j].y);
              	myPoints.push(point);
-            }          
+            }
             var polygon = new BMap.Polygon(myPoints, {strokeColor:"blue", strokeWeight:6, strokeOpacity:0.5});
          	map.addOverlay(polygon);
         }
-    }); 
+    });
 	});
 
 //获得颜色
