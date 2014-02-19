@@ -34,7 +34,7 @@ var okdata = JSON.parse(chartdata);
                 }
             },
 			title: {
-				text: 'SINR\RSRP',
+				text: 'SINR  RSRP',
 				style: {
                     color: '#89A54E'
                 }
@@ -143,8 +143,8 @@ var okdata = JSON.parse(chartdata);
 	});
 	
 	var chart = $('#container').highcharts();
-	//for(int i=0;i<5;i++)
-	//	chart.series[i].hide();
+	for(var i=0;i<6;i++)
+		chart.series[i].hide();
 	/*function Band(from,to,pci){
 		this.from = from;
 		this.to = to;

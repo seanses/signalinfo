@@ -2,7 +2,7 @@
 require_once 'Tools.php';
 // 连接数据库
 function db_connect() {
-	$result = new mysqli ( "localhost", "root", "", "signalinfo" );
+	$result = new mysqli ( "localhost", "root", "sudo", "signalinfo" );
 	if (! $result) {
 		throw new Exception ( 'Could not connect to database server' );
 	} else {
