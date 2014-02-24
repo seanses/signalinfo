@@ -33,6 +33,7 @@ var map = new BMap.Map("l-map");          // 创建地图实例
 var point = new BMap.Point(116.633604,40.312968);  // 创建点坐标
 var circle_color;
 var myPoligons = [];
+var backpoint;
 map.centerAndZoom(point, 40);                 // 初始化地图，设置中心点坐标和地图级别
 map.enableScrollWheelZoom();
 
@@ -63,44 +64,36 @@ function EOffsetBearing(point3, dist, bearing) {
 }
 
 var point1 = new BMap.Point(116.64480,40.31580);
-var polygon11 = Sector1(point1, 50, 180, 240, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon11 = Sector1(point1, 50,320,380, "#ffff00", 3, 0.5, "#00ff00", 0.5);//180, 240
 map.addOverlay(polygon11);
-var polygon12 = Sector1(point1, 50, 90, 150, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon12 = Sector1(point1, 50,240,300, "#ffff00", 3, 0.5, "#00ff00", 0.5);//90, 150
 map.addOverlay(polygon12);
-var polygon13 = Sector1(point1, 50, 30, 90, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon13 = Sector1(point1, 50,160,220, "#ffff00", 3, 0.5, "#00ff00", 0.5);//30, 90
 map.addOverlay(polygon13);
 
 var point2 = new BMap.Point(116.6359,40.30915);
-var polygon21 = Sector1(point2, 50, 270, 330, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon21 = Sector1(point2, 50,275,335, "#ffff00", 3, 0.5, "#00ff00", 0.5);//270, 330
 map.addOverlay(polygon21);
-var polygon22 = Sector1(point2, 50, 150, 210, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon22 = Sector1(point2, 50,65,125, "#ffff00", 3, 0.5, "#00ff00", 0.5);//150, 210
 map.addOverlay(polygon22);
-var polygon23 = Sector1(point2, 50, 80, 140, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon23 = Sector1(point2, 50,125,185, "#ffff00", 3, 0.5, "#00ff00", 0.5);//80, 140
 map.addOverlay(polygon23);
 
-var point3 = new BMap.Point(116.6373,40.31745);
-var polygon31 = Sector1(point3, 50, 30, 90, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var point3 = new BMap.Point(116.636772,40.322987);
+var polygon31 = Sector1(point3, 50,300,360 , "#ffff00", 3, 0.5, "#00ff00", 0.5);//30, 90
 map.addOverlay(polygon31);
-var polygon32 = Sector1(point3, 50, 270, 330, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon32 = Sector1(point3, 50,90,150, "#ffff00", 3, 0.5, "#00ff00", 0.5);//270, 330
 map.addOverlay(polygon32);
-var polygon33 = Sector1(point3, 50, 170, 230, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon33 = Sector1(point3, 50,150,210, "#ffff00", 3, 0.5, "#00ff00", 0.5);//170, 230
 map.addOverlay(polygon33);
 
-var point4 = new BMap.Point(116.6379,40.31805);
-var polygon41 = Sector1(point4, 50, 270, 330, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var point4 = new BMap.Point(116.637725,40.317957);
+var polygon41 = Sector1(point4, 50,15,75, "#ffff00", 3, 0.5, "#00ff00", 0.5);//270, 330
 map.addOverlay(polygon41);
-var polygon42 = Sector1(point4, 50, 180, 240, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon42 = Sector1(point4, 50,315,375, "#ffff00", 3, 0.5, "#00ff00", 0.5);//180, 240
 map.addOverlay(polygon42);
-var polygon43 = Sector1(point4, 50, 30, 90, "#ffff00", 3, 0.5, "#00ff00", 0.5);
+var polygon43 = Sector1(point4, 50,150,210,"#ffff00", 3, 0.5, "#00ff00", 0.5);//30, 90
 map.addOverlay(polygon43);
-
-var point5 = new BMap.Point(116.64261,40.31129);
-var polygon51 = Sector1(point5, 50, 30, 90, "#ffff00", 3, 0.5, "#00ff00", 0.5);
-map.addOverlay(polygon51);
-var polygon52 = Sector1(point5, 50, 145, 205, "#ffff00", 3, 0.5, "#00ff00", 0.5);
-map.addOverlay(polygon52);
-var polygon53 = Sector1(point5, 50, 270, 330, "#ffff00", 3, 0.5, "#00ff00", 0.5);
-map.addOverlay(polygon53);
 
 /**************************
 *    end     wushan       *
@@ -293,7 +286,7 @@ var txtMenuItem = [
 		startmarker.hide();
 		endmarker.hide();
 		driving.search(startpoint, endpoint);
-		startpoint = endpoint = undefined;
+		//startpoint = endpoint = undefined;
 	}
    }
   },
@@ -310,7 +303,7 @@ var txtMenuItem = [
 		startmarker.hide();
 		endmarker.hide();
 		driving.search(startpoint, endpoint);
-		startpoint = endpoint = undefined;
+		//startpoint = endpoint = undefined;
 	}
    }
   }

@@ -7,10 +7,10 @@ class Point{
 	var $x;
 	var $y;
 	var $extra;
-	function Point($dit, $sinr,$pci){
+	function Point($dit, $sinr,$longitude,$latitude){
 		$this->x = $dit;
 		$this->y = $sinr;
-		$this->extra = $pci;
+		$this->extra = array($longitude,$latitude);
 	}
 }
 class Band{
@@ -48,12 +48,12 @@ foreach($data as $d){
 	while($row = mysql_fetch_array($result)){
 		if(distance($lng,$lat,$row['Longitude'],$row['Latitude'])<=30){
 			//Add Average values and Variance values to arrays
-			array_push($points_sinr_ave,new Point($d['dit'],floatval($row['PCC_RANK1_SINR_AVERAGE']),$row['PCI']));
-			array_push($points_sinr_var,new Point($d['dit'],floatval($row['PCC_RANK1_SINR_VARIANCE']),$row['PCI']));
-			array_push($points_rsrp_ave,new Point($d['dit'],floatval($row['SERVING_CELL_RSRP_AVERAGE']),$row['PCI']));
-			array_push($points_rsrp_var,new Point($d['dit'],floatval($row['SERVING_CELL_RSRP_VARIANCE']),$row['PCI']));
-			array_push($points_tput_ave,new Point($d['dit'],floatval($row['PDCP_Throughput_DL_AVERAGE']),$row['PCI']));
-			array_push($points_tput_var,new Point($d['dit'],floatval($row['PDCP_Throughput_DL_VARIANCE']),$row['PCI']));
+			array_push($points_sinr_ave,new Point($d['dit'],floatval($row['PCC_RANK1_SINR_AVERAGE']),$row['Longitude'],$row['Latitude']));
+			array_push($points_sinr_var,new Point($d['dit'],floatval($row['PCC_RANK1_SINR_VARIANCE']),$row['Longitude'],$row['Latitude']));
+			array_push($points_rsrp_ave,new Point($d['dit'],floatval($row['SERVING_CELL_RSRP_AVERAGE']),$row['Longitude'],$row['Latitude']));
+			array_push($points_rsrp_var,new Point($d['dit'],floatval($row['SERVING_CELL_RSRP_VARIANCE']),$row['Longitude'],$row['Latitude']));
+			array_push($points_tput_ave,new Point($d['dit'],round(floatval($row['PDCP_Throughput_DL_AVERAGE'])/1024,1),$row['Longitude'],$row['Latitude']));
+			array_push($points_tput_var,new Point($d['dit'],round(floatval($row['PDCP_Throughput_DL_VARIANCE'])/1024/1024,1),$row['Longitude'],$row['Latitude']));
 			
 			//Add Scatter dots to arrays
 			$gid = $row['Gridid'];
@@ -61,9 +61,9 @@ foreach($data as $d){
 			$numarr = String2Int($processed['originalid']);
 			foreach($numarr as $num){
 				$s = mysql_fetch_array(mysql_query("SELECT * FROM originalinfo WHERE id = '$num'"));
-				array_push($points_sinr_scatter,new Point($d['dit'],floatval($s['PCC_RANK1_SINR']),$row['PCI']));
-				array_push($points_rsrp_scatter,new Point($d['dit'],floatval($s['Serving_Cell_RSRP']),$row['PCI']));
-				array_push($points_tput_scatter,new Point($d['dit'],floatval($s['PDCP_Throughput_DL']),$row['PCI']));
+				array_push($points_sinr_scatter,new Point($d['dit'],floatval($s['PCC_RANK1_SINR']),$row['Longitude'],$row['Latitude']));
+				array_push($points_rsrp_scatter,new Point($d['dit'],floatval($s['Serving_Cell_RSRP']),$row['Longitude'],$row['Latitude']));
+				array_push($points_tput_scatter,new Point($d['dit'],round(floatval($s['PDCP_Throughput_DL'])/1024,1),$row['Longitude'],$row['Latitude']));
 			}
 			
 			//Add Bands to arrays

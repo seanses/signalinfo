@@ -41,26 +41,32 @@ var okdata = JSON.parse(chartdata);
 			},
 		},{
             labels: {
-                format: '{value} Kbps',
+                format: '{value} Mbps',
                 style: {
                     color: '#4572A7'
                 }
             },
 			title: {
-                text: 'Throughput DL',
+                text: '下行吞吐量',
                 style: {
                     color: '#4572A7'
                 }
             },
             opposite: true
 		}],
-		/*plotOptions: {
+		plotOptions: {
             series: {
-                marker: {
-                    enabled: false
-                }
+               cursor: 'pointer',
+			   events: {
+				click: function(event) {
+					parent.jq.fancybox.close();
+					parent.map.removeOverlay(parent.backpoint);
+					parent.backpoint = new parent.BMap.Marker(new parent.BMap.Point(event.point.extra[0],event.point.extra[1]));
+					parent.map.addOverlay(parent.backpoint);
+				}
+			   }
             }
-        },*/
+        },
 		tooltip: {
             shared: true,
         },
@@ -68,6 +74,7 @@ var okdata = JSON.parse(chartdata);
 			type: 'line',
 			name: 'SINR 平均值',
 			data: okdata[0],
+			visible: false,
 			tooltip: {
                 valueSuffix: ' dB'
             }
@@ -75,6 +82,7 @@ var okdata = JSON.parse(chartdata);
 			type: 'line',
 			name: 'SINR 方差',
 			data: okdata[1],
+			visible: false,
 			tooltip: {
                 valueSuffix: ' dB'
             }
@@ -82,6 +90,7 @@ var okdata = JSON.parse(chartdata);
 			type: 'scatter',
 			name: 'SINR 散点',
 			data: okdata[2],
+			visible: false,
 			marker: {
 				radius: 4
 			},
@@ -92,6 +101,7 @@ var okdata = JSON.parse(chartdata);
 			type: 'line',
 			name: 'RSRP 平均值',
 			data: okdata[3],
+			visible: false,
 			tooltip: {
                 valueSuffix: ' dB'
             }
@@ -99,6 +109,7 @@ var okdata = JSON.parse(chartdata);
 			type: 'line',
 			name: 'RSRP 方差',
 			data: okdata[4],
+			visible: false,
 			tooltip: {
                 valueSuffix: ' dB'
             }
@@ -106,6 +117,7 @@ var okdata = JSON.parse(chartdata);
 			type: 'scatter',
 			name: 'RSRP 散点',
 			data: okdata[5],
+			visible: false,
 			marker: {
 				radius: 4
 			},
@@ -114,37 +126,37 @@ var okdata = JSON.parse(chartdata);
             }
 		},{
 			type: 'line',
-			name: 'PDCP_Throughput_DL 平均值',
+			name: '下行吞吐量 平均值',
 			data: okdata[6],
 			yAxis: 1,
 			tooltip: {
-                valueSuffix: ' Kbps'
+                valueSuffix: ' Mbps'
             }
 		},{
 			type: 'line',
-			name: 'PDCP_Throughput_DL 方差',
+			name: '下行吞吐量 方差',
 			data: okdata[7],
 			yAxis: 1,
 			tooltip: {
-                valueSuffix: ' Kbps'
+                valueSuffix: ' Mbps'
             }
 		},{
 			type: 'scatter',
-			name: 'PDCP_Throughput_DL 散点',
+			name: '下行吞吐量 散点',
 			data: okdata[8],
 			yAxis: 1,
 			marker: {
 				radius: 4
 			},
 			tooltip: {
-                valueSuffix: ' Kbps'
+                valueSuffix: ' Mbps'
             }
 		}]
 	});
 	
 	var chart = $('#container').highcharts();
-	for(var i=0;i<6;i++)
-		chart.series[i].hide();
+	//for(var i=0;i<6;i++)
+	//	chart.series[i].hide();
 	/*function Band(from,to,pci){
 		this.from = from;
 		this.to = to;

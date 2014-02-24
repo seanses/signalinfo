@@ -11,7 +11,7 @@ function db_connect() {
 }
 
 // 上传原始数据
-function originalinfo_upload($upfile) {
+function originalinfo_upload($upfile,$people) {
 	$conn = db_connect ();
 	$handle = fopen ( $upfile, "r" );
 	if ($head = fgetcsv ( $handle )) {
@@ -28,6 +28,7 @@ function originalinfo_upload($upfile) {
 			$datetime = Empty2Zero($data[$col['Date & Time']]);
 			$longitude = Empty2Zero($data[$col['Longitude']]);
 			$latitude = Empty2Zero($data[$col['Latitude']]);
+			if(!($longitude && $latitude)) continue;
 			$gpshight = Empty2Zero($data[$col['GPS Hight']]);
 			$gpsspeed = Empty2Zero($data[$col['GPS Speed']]);
 			$gpssatellites = Empty2Zero($data[$col['GPS Satellites']]);
@@ -40,7 +41,7 @@ function originalinfo_upload($upfile) {
 			$servingcellrsrq = Empty2Zero($data[$col['Serving Cell RSRQ(dB)']]);
 			$servingcellrssi = Empty2Zero($data[$col['Serving Cell RSSI(dBm)']]);
 			$throughputul = Empty2Zero($data[$col['PDCP Throughput UL(kbit/s)']]);
-			$throughputdl = Empty2Zero($data[$col['PDCP Throughput DL(kbit/s)']]);
+			$throughputdl = Empty2Zero($data[$col['PDCP Throughput DL(kbit/s)']])*$people;
 			
 			$sqlstr1 = "INSERT into originalinfo values (
 			NULL,
