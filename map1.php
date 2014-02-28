@@ -132,29 +132,23 @@ jq(document).ready(function(){
 								 jq.get("data_output.php?type=detail&longi="+ longi +"&lati="+lati,function(jsonback,status){
                                  //  alert("数据：" + jsonback + "\n状态：" + status);
 								   var sContent;
-								   var a ;var b;var c;var d;var e;var f;
 
 								   var back = JSON.parse(jsonback);
-								   sContent ="<div><h4 style='margin:0 0 5px 0;padding:0.2em 0'>详细信息</h4>" +
-								             "<table border='1';text-align='center'><tr><th>TIME</th><th>LONGITUDE</th><th>LATITUDE</th><th>SINR</th><th>RSRP</th><th>PCI</th></tr>";
+								   sContent ="<div><button onclick='deletePoint("+json.Gridid+");' />删除这个点</button></div>"+"<div><h4 style='margin:0 0 5px 0;padding:0.2em 0'>详细信息</h4>" +
+								             "<table border='1';text-align='center'><tr><th>时间</th><th>经度</th><th>纬度</th><th>PCI</th><th>SINR(dB)</th><th>RSRP(dB)</th><th>下行吞吐量(Kbps)</th></tr>";
 								   
 								   for(var j=0;j<back.detaildata.length;j++){
-								   a=back.detaildata[j].DateTime;
-								   sContent +="<tr><td align='center'>"+a+"</td>";
-								   b=back.detaildata[j].Longitude; 
-								   sContent +="<td align='center'>"+b+"</td>";
-								   c=back.detaildata[j].Latitude;
-								   sContent +="<td align='center'>"+c+"</td>";
-								   d=back.detaildata[j].PCC_RANK1_SINR;
-								   sContent +="<td align='center'>"+d+"</td>";
-								   e=back.detaildata[j].Serving_Cell_RSRP;
-								   sContent +="<td align='center'>"+e+"</td>";
-								   f=back.detaildata[j].Serving_Cell_PCI;
-								   sContent +="<td align='center'>"+f+"</td></tr>";  
+								   sContent +="<tr><td align='center'>"+back.detaildata[j].DateTime+"</td>"+
+								   "<td align='center'>"+back.detaildata[j].Longitude+"</td>"+
+								   "<td align='center'>"+back.detaildata[j].Latitude+"</td>"+
+								   "<td align='center'>"+back.detaildata[j].Serving_Cell_PCI+"</td>"+
+								   "<td align='center'>"+back.detaildata[j].PCC_RANK1_SINR+"</td>"+
+								   "<td align='center'>"+back.detaildata[j].Serving_Cell_RSRP+"</td>"+
+								   "<td align='center'>"+back.detaildata[j].PDCP_Throughput_DL+"</td></tr>";
 								   }
 								   sContent +="</table><div>";
 								   
-								   var opts = {width:450}    // 信息窗口宽度
+								   var opts = {width:1200}    // 信息窗口宽度
                                    
 								   var infoWindow = new BMap.InfoWindow(sContent,opts);
 							        //var infoWindow = new BMap.InfoWindow("<h4 style='margin:0 0 5px 0;padding:0.2em 0'>详细信息</h4>"+sContent, opts);  // 创建信息窗口对象
@@ -162,25 +156,14 @@ jq(document).ready(function(){
 							       map.openInfoWindow(infoWindow,center); //开启信息窗口	 
 								   
 								   });
-								 
-							  /* sContent =
-                                        "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>详细信息</h4>" + 
-                             
-                                        "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>天安门坐落在中国北京市中心,故宫的南侧,与天安门广场隔长安街相望,是清朝皇城的大门...</p>" + 
-                                         "</div>";*/
-								    
-                            
 	    					}); 
 	    					myPoligons[i].addEventListener('mouseover', function(){
-	    					//	document.getElementById("information").innerHTML = json.PCC_RANK1_SINR_AVERAGE;
 								
 								var centerpoint = this.getCenter();
                                 var hotSpot = new BMap.Hotspot(centerpoint, {text: "PCI: "+json.PCI+
 																			"<br />SINR平均值: "+json.PCC_RANK1_SINR_AVERAGE+
-																			"<br />RSRP平均值: "+json.SERVING_CELL_RSRP_AVERAGE+
-																			"<br />RSRQ平均值: "+json.SERVING_CELL_RSRQ_AVERAGE+
-																			"<br />RSSI平均值: "+json.SERVING_CELL_RSSI_AVERAGE+
-																			"<br />Throughput_UL平均值: "+json.PDCP_Throughput_UL_AVERAGE});
+																			"dB<br />RSRP平均值: "+json.SERVING_CELL_RSRP_AVERAGE+
+																			"dB<br />下行吞吐量平均值: "+json.PDCP_Throughput_DL_AVERAGE+"Kbps"});
                                 map.addHotspot(hotSpot);
 	    					}); 
 	    					myPoligons[i].addEventListener('mouseout', function(){
@@ -227,7 +210,13 @@ function getColor(number){
 	else
 		return '#DC143C';
 }
-
+//删除点
+function deletePoint(grid){
+	jq.get("deletePoint.php?grid="+grid,function(data,status){
+		alert("删除成功");
+		location.reload();
+	});
+}
 
 /**************************
 *    end  zhangyichi      *
@@ -262,7 +251,7 @@ function openchartcallback(){
 
 function findMids(p1,p2,d0){
 	var sp = [];
-	if(p1.distanceTo(p2)>=30){
+	if(p1.distanceTo(p2)>=<?php include_once 'params.php'; echo $_config['params']['ACCURACY_DEFAULT']; ?>){
 		var mid = p1.midpointTo(p2);
 		sp=sp.concat(findMids(p1,mid,d0));
 		sp.push(new OneStep(mid._lon,mid._lat,d0+p1.distanceTo(mid)));

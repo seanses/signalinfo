@@ -1,8 +1,10 @@
 <?php
 require_once 'Tools.php';
+include_once 'params.php';
 // 连接数据库
 function db_connect() {
-	$result = new mysqli ( "localhost", "root", "sudo", "signalinfo" );
+	global $_config;
+	$result = new mysqli ( $_config['db']['dbhost'], $_config['db']['dbuser'], $_config['db']['dbpw'], $_config['db']['dbname'] );
 	if (! $result) {
 		throw new Exception ( 'Could not connect to database server' );
 	} else {

@@ -11,14 +11,17 @@
 </head>
 <body>
 <div id="container"></div>
+<label for="iftooltip">信息框</label><input type="checkbox" id="iftooltip" checked/>
 </body>
 </html>
 <script type="text/javascript">
-$(function(){
 var chartdata = $("#chartdata",parent.document).val();
 var okdata = JSON.parse(chartdata);
-	$('#container').highcharts({
+var chart;
+$(function(){
+var options = ({
 		chart: {
+			renderTo: 'container'
 		},
 		title: {
 			text: 'Channel Quality Info'
@@ -64,7 +67,8 @@ var okdata = JSON.parse(chartdata);
 					parent.backpoint = new parent.BMap.Marker(new parent.BMap.Point(event.point.extra[0],event.point.extra[1]));
 					parent.map.addOverlay(parent.backpoint);
 				}
-			   }
+			   },
+			   animation: false
             }
         },
 		tooltip: {
@@ -153,8 +157,7 @@ var okdata = JSON.parse(chartdata);
             }
 		}]
 	});
-	
-	var chart = $('#container').highcharts();
+	chart = new Highcharts.Chart(options);
 	//for(var i=0;i<6;i++)
 	//	chart.series[i].hide();
 	/*function Band(from,to,pci){
@@ -200,7 +203,15 @@ var okdata = JSON.parse(chartdata);
 			});
 		}
 	}*/
-	okdata[9].shift();
+	addPlotBand();
+	$("#iftooltip").change(function(){
+		options.tooltip.enabled = document.getElementById("iftooltip").checked;
+		chart = new Highcharts.Chart(options);
+		addPlotBand();
+	});
+});
+
+function addPlotBand(){
 	for(var i=0;i<okdata[9].length;i++){
 		if(i%2){
 			chart.xAxis[0].addPlotBand({
@@ -223,5 +234,5 @@ var okdata = JSON.parse(chartdata);
 			});
 		}
 	}
-});
+}
 </script>

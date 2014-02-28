@@ -3,7 +3,7 @@ require_once 'GPSconvertor.php';
 require_once 'MysqlConnection.php';
 require_once 'ToBaidu.php';
 require_once 'Tools.php';
-require_once 'params.php';
+include_once 'params.php';
 
 set_time_limit(0);
 
@@ -85,7 +85,7 @@ while($row = mysql_fetch_array($result))
 		'0' ,
 		'0' ,
 		'0' ,
-		'0')") or  defined("DEPLOY")? die(ERROR_MESSAGE()) : die("Invalid query of inserting into baidubased: " . mysql_error());
+		'0')") or  defined("DEPLOY")? die($_config['params']['ERROR_MESSAGE']) : die("Invalid query of inserting into baidubased: " . mysql_error());
 		
 		$affected_rows = mysql_affected_rows();
 		echo "INSERT " . $affected_rows . "rows into baidubased.<br />";
@@ -114,7 +114,7 @@ while($row = mysql_fetch_array($result))
 		echo "<br />";
 		
 		//baidu items
-		$_baidu = mysql_query("SELECT * FROM baidubasedinfo WHERE  Gridid='$pro_id'") or  defined("DEPLOY")? die(ERROR_MESSAGE()) : die("Invalid query of selecting exact entry of baidu: " . mysql_error());
+		$_baidu = mysql_query("SELECT * FROM baidubasedinfo WHERE  Gridid='$pro_id'") or  defined("DEPLOY")? die($_config['params']['ERROR_MESSAGE']) : die("Invalid query of selecting exact entry of baidu: " . mysql_error());
 		$baidu = mysql_fetch_array($_baidu);
 		
 		
@@ -152,7 +152,7 @@ while($row = mysql_fetch_array($result))
 		SERVING_CELL_RSSI_VARIANCE = $rssi_var ,
 		PDCP_Throughput_UL_VARIANCE = $tputul_var ,
 		PDCP_Throughput_DL_VARIANCE = $tputdl_var
-		WHERE Gridid='$pro_id'") or  defined("DEPLOY")? die(ERROR_MESSAGE()) : die("Invalid query of updating baidubased: " . mysql_error());
+		WHERE Gridid='$pro_id'") or  defined("DEPLOY")? die($_config['params']['ERROR_MESSAGE']) : die("Invalid query of updating baidubased: " . mysql_error());
 		$affected_rows = mysql_affected_rows();
 		echo "UPDATE " . $affected_rows . " rows of baidubased.<br />";
 	}

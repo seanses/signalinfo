@@ -15,6 +15,7 @@ upload_file('userfile',$uploadFile);
 
   //连接数据库文件
   db_connect();
+  
   originalinfo_upload($uploadFile,$_POST["people"]);
   
   // show what was uploaded
