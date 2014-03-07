@@ -1,7 +1,7 @@
 <?php
 require_once 'MysqlConnection.php';
 /******************
-*    ¿Õ´®·µ»Ø0    *
+*    ï¿½Õ´ï¿½ï¿½ï¿½ï¿½ï¿½0    *
 ******************/
 function Empty2Zero($s)
 {
@@ -9,7 +9,7 @@ function Empty2Zero($s)
 }
 
 /*****************************
-*   ·µ»ØÒÔ#ºÅ¸ô¿ªµÄÒ»×éid    *
+*   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½#ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½id    *
 ******************************/
 function String2Int($str){
 	$str_arr = explode("#",$str);
@@ -21,7 +21,7 @@ function String2Int($str){
 }
 
 /******************
-*    ¼ÆËã·½²î     *
+*    ï¿½ï¿½ï¿½ã·½ï¿½ï¿½     *
 ******************/
 function CalcVariance($id_arr,$count,$ave,$what){
 	$powsum = 0;
@@ -41,7 +41,7 @@ function CalcVariance($id_arr,$count,$ave,$what){
 }
 
 /*******************************
-*    È¡Ð¡ÊýµãºóÒ»Î»ÓÐÐ§Êý×é    *
+*    È¡Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Î»ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½    *
 *******************************/
 function LastEffect($num){
 	$pow = 0;
@@ -53,21 +53,20 @@ function LastEffect($num){
 	$num/=pow(10.0,$pow);
 	return $num;
 }
-<<<<<<< HEAD
 /*******************************
- *    Í¹°üÏà¹Øº¯Êý   *
+ *    Í¹ï¿½ï¿½ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½   *
 *******************************/
-//»ñµÃÁ½µãÖ®¼äµÄÆ½Ãæ¾àÀë
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 function getDistance($p1,$p2){
 	return sqrt(($p1['x']-$p2['y'])*($p1['x']-$p2['y'])+($p1['y']-$p2['y'])*($p1['y']-$p2['y']));
 }
 
-//·µ»ØÖµÎªÕýËµÃ÷p0p1p2ÓÒ×ª Èô·µ»ØÖµÎª¸ºÔòËµÃ÷p0p1p2Îª×ó×ª
+//ï¿½ï¿½ï¿½ï¿½ÖµÎªï¿½ï¿½Ëµï¿½ï¿½p0p1p2ï¿½ï¿½×ª ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÎªï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½p0p1p2Îªï¿½ï¿½×ª
 function Mutiply($p1,$p2,$p0){
 	return (($p1['x']-$p0['x'])*($p2['y']-$p0['y'])-($p2['x']-$p0['x'])*($p1['y']-$p0['y']));
 }
 
-//»ñµÃÍ¹°üÊý¾Ý
+//ï¿½ï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 function GetRegion($pointsArray){
 	$start = $pointsArray[0];
 	$n = 0;
@@ -77,7 +76,7 @@ function GetRegion($pointsArray){
 			$n = $i;
 		}
 	}
-	//½«×î×óÏÂµÄµãÒÆµ½Ç°¶Ë
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÂµÄµï¿½ï¿½Æµï¿½Ç°ï¿½ï¿½
 	$tmp = $pointsArray[0];
 	$pointsArray[0] = $start;
 	$pointsArray[$n] = $tmp;
@@ -101,7 +100,7 @@ function GetRegion($pointsArray){
 				break;
 			array_pop($vector);
 		}
-		//È¥³ýÊý×é¿ÕÖµ
+		//È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 		if($pointsArray[$i]!=null){
 		array_push($vector, $pointsArray[$i]);}
 		// 		echo $pointsArray[$i]['x'].'<br/>' ;
@@ -109,6 +108,4 @@ function GetRegion($pointsArray){
 	return $vector;
 	// 	return $pointsArray;
 }
-=======
->>>>>>> parent of 407001a... æ•´åˆå‡¸åŒ…åŠŸèƒ½
 ?>
