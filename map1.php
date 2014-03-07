@@ -195,7 +195,6 @@ jq(document).ready(function(){
 	    				})();
 	    	    }	
 	    });
-<<<<<<< HEAD:map1.php
 	});
 	
 /**
@@ -210,7 +209,6 @@ function drawRegion(data){
     	map.centerAndZoom(point, 17);
         for(var i=0; i<data.regiondata.length; i++){
         	var myPoints = [];
-=======
 		
 		jq.getJSON("data_output.php?type=region",function(data){
     	// 百度地图API功能
@@ -218,13 +216,11 @@ function drawRegion(data){
     	map.centerAndZoom(point, 17);
     	var myPoints = [];
         for(var i=0; i<data.regiondata.length; i++){
->>>>>>> parent of 407001a... 整合凸包功能:map1.html
             var point_list = data.regiondata[i];
             for(var j=0; j<point_list.length;j++){
            	 	point = new BMap.Point(point_list[j].x, point_list[j].y);
              	myPoints.push(point);
             }
-<<<<<<< HEAD:map1.php
             var region_color = '#'+('00000'+(Math.random()*0x1000000<<0).toString(16)).slice(-6);
             var polygon= new BMap.Polygon(myPoints, {fillColor:region_color, strokeColor:region_color, StrokeWeight:1, fillOpacity:0.3, strokeOpacity:0.00001});
             map.addOverlay(polygon);
@@ -241,13 +237,6 @@ function clearRegion(){
 	}
 	regionoverlay=[];
 }
-=======
-            var polygon = new BMap.Polygon(myPoints, {strokeColor:"blue", strokeWeight:6, strokeOpacity:0.5});
-         	map.addOverlay(polygon);
-        }
-    });
-	});
->>>>>>> parent of 407001a... 整合凸包功能:map1.html
 
 //获得颜色
 function getColor(number){
