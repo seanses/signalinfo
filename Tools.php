@@ -53,6 +53,7 @@ function LastEffect($num){
 	$num/=pow(10.0,$pow);
 	return $num;
 }
+<<<<<<< HEAD
 /*******************************
  *    凸包相关函数   *
 *******************************/
@@ -108,4 +109,6 @@ function GetRegion($pointsArray){
 	return $vector;
 	// 	return $pointsArray;
 }
+=======
+>>>>>>> parent of 407001a... 鏁村悎鍑稿寘鍔熻兘
 ?>
