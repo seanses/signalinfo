@@ -1,7 +1,7 @@
 <?php
 require_once 'MysqlConnection.php';
 /******************
-*    ¿Õ´®·µ»Ø0    *
+*   ç©ºä¸²è¿”å›ž0  *
 ******************/
 function Empty2Zero($s)
 {
@@ -9,7 +9,7 @@ function Empty2Zero($s)
 }
 
 /*****************************
-*   ·µ»ØÒÔ#ºÅ¸ô¿ªµÄÒ»×éid    *
+*   è¿”å›žä»¥#å·éš”å¼€çš„ä¸€ç»„id   *
 ******************************/
 function String2Int($str){
 	$str_arr = explode("#",$str);
@@ -21,7 +21,7 @@ function String2Int($str){
 }
 
 /******************
-*    ¼ÆËã·½²î     *
+*   è®¡ç®—æ–¹å·®       *
 ******************/
 function CalcVariance($id_arr,$count,$ave,$what){
 	$powsum = 0;
@@ -41,7 +41,7 @@ function CalcVariance($id_arr,$count,$ave,$what){
 }
 
 /*******************************
-*    È¡Ð¡ÊýµãºóÒ»Î»ÓÐÐ§Êý×é    *
+*   å–å°æ•°ç‚¹åŽä¸€ä½æœ‰æ•ˆæ•°ç»„     *
 *******************************/
 function LastEffect($num){
 	$pow = 0;
@@ -54,19 +54,41 @@ function LastEffect($num){
 	return $num;
 }
 /*******************************
- *    Í¹°üÏà¹Øº¯Êý   *
+ *    by zhangyichi   *
 *******************************/
-//»ñµÃÁ½µãÖ®¼äµÄÆ½Ãæ¾àÀë
+
+/*******************************
+ *    å‡¸åŒ…ç›¸å…³å‡½æ•°   *
+*******************************/
+/**
+ * get the distance 
+ * @param unknown $p1
+ * @param unknown $p2
+ * @return number
+ */
 function getDistance($p1,$p2){
 	return sqrt(($p1['x']-$p2['y'])*($p1['x']-$p2['y'])+($p1['y']-$p2['y'])*($p1['y']-$p2['y']));
 }
 
-//·µ»ØÖµÎªÕýËµÃ÷p0p1p2ÓÒ×ª Èô·µ»ØÖµÎª¸ºÔòËµÃ÷p0p1p2Îª×ó×ª
+
+
+/**
+ * åˆ¤æ–­p1,p2,p3æ˜¯å‘å·¦åè½¬è¿˜æ˜¯å‘å³åè½¬
+ * è¿”å›žå€¼ä¸ºæ­£è¯´æ˜Žp0p1p2å³è½¬ è‹¥è¿”å›žå€¼ä¸ºè´Ÿåˆ™è¯´æ˜Žp0p1p2ä¸ºå·¦è½¬
+ * @param unknown $p1
+ * @param unknown $p2
+ * @param unknown $p0
+ * @return number
+ */
 function Mutiply($p1,$p2,$p0){
 	return (($p1['x']-$p0['x'])*($p2['y']-$p0['y'])-($p2['x']-$p0['x'])*($p1['y']-$p0['y']));
 }
 
-//»ñµÃÍ¹°üÊý¾Ý
+/**
+ * æ ¹æ®ä¼ å…¥çš„åæ ‡æ•°ç»„å¾—åˆ°å…¶å‡¸åŒ…æ•°ç»„
+ * @param unknown $pointsArray
+ * @return multitype:unknown
+ */
 function GetRegion($pointsArray){
 	$start = $pointsArray[0];
 	$n = 0;
@@ -76,7 +98,7 @@ function GetRegion($pointsArray){
 			$n = $i;
 		}
 	}
-	//½«×î×óÏÂµÄµãÒÆµ½Ç°¶Ë
+	//å°†æœ€å·¦ä¸‹çš„ç‚¹ç§»åˆ°å‰ç«¯
 	$tmp = $pointsArray[0];
 	$pointsArray[0] = $start;
 	$pointsArray[$n] = $tmp;
@@ -100,8 +122,8 @@ function GetRegion($pointsArray){
 				break;
 			array_pop($vector);
 		}
-		//È¥³ýÊý×é¿ÕÖµ
-		if($pointsArray[$i]!=null){
+		//åŽ»é™¤æ•°ç»„ç©ºå€¼
+	if($pointsArray[$i]!=null){
 		array_push($vector, $pointsArray[$i]);}
 		// 		echo $pointsArray[$i]['x'].'<br/>' ;
 	}

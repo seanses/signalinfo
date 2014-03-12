@@ -64,8 +64,10 @@ var options = ({
 				click: function(event) {
 					parent.jq.fancybox.close();
 					parent.map.removeOverlay(parent.backpoint);
-					parent.backpoint = new parent.BMap.Marker(new parent.BMap.Point(event.point.extra[0],event.point.extra[1]));
+					var marker_point = new parent.BMap.Point(event.point.extra[0],event.point.extra[1]);
+					parent.backpoint = new parent.BMap.Marker(marker_point);
 					parent.map.addOverlay(parent.backpoint);
+					parent.map.centerAndZoom(marker_point, 40);
 				}
 			   },
 			   animation: false
