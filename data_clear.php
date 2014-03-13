@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'db_helper.php';
 require_once 'file_helper.php';
 require_once 'Tools.php';
