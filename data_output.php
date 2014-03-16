@@ -1,24 +1,27 @@
 <?php
 require_once 'db_helper.php';
-require_once 'config.php';
 require_once 'file_helper.php';
 require_once 'Tools.php';
 $data = array (
 		'error' => 0 
 );
-if ($_GET ['type']) {
-	$output_type = $_GET ['type'];
-	// 加载原始信息
+if ($_GET ['type']) {     		 		//get the type of data which browser want
+	$output_type = $_GET ['type']; 
+	$data['pciNum'] = count(get_PCI_list());  //write the num of pci for pages to get
+	// loading original data
 	if ($output_type == 'original') {
 		$data ['originaldata'] = originalinfo_get ();
-	} 	// 加载某坐标详细历史信息
+	} 	
+
+	// loading detail points data
 	else if ($output_type == 'detail') {
 		if ($_GET ["longi"] && $_GET ["lati"]) {
 			$data ['detaildata'] = get_detial_data ( $_GET ['longi'], $_GET ['lati'] );
 			// $data['detaildata'] = get_detial_data(116.643098, 40.315050);
 		} else
 			$data ['error'] = 1;
-	} 	// 加载csv文件路径信息
+	} 	
+	// loading  the data of csv file
 	else if ($output_type == "path") {
 		if ($_GET ["file"]) {
 			$file = $_GET ["file"];
@@ -67,8 +70,20 @@ if ($_GET ['type']) {
 			fclose ( $handle );
 		}
 	}
+	
+	//loading data of pci region
 	else if($output_type == "region"){
 		$data['regiondata'] = get_region_data();
+	}
+	
+	//loading the pci list data
+	else if($output_type == "pciList"){
+		$data['pciList'] = get_PCI_list();
+	}
+	
+	//loading the data of base station 
+	else if($output_type == "baseStation"){
+		$data['baseStation'] = getBasestation();
 	}
 } else
 	$data ['error'] = 1;

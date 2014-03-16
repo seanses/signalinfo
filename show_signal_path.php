@@ -36,7 +36,7 @@ dl,dt,dd,ul,li {
 
 dt {
 	font-size: 14px;
-	font-family: "Î¢ÈíÑÅºÚ";
+	font-family: "å¾®è½¯é›…é»‘";
 	font-weight: bold;
 	border-bottom: 1px dotted #000;
 	padding: 5px 0 5px 5px;
@@ -114,12 +114,12 @@ li {
 </style>
 <script type="text/javascript"
 	src="http://api.map.baidu.com/api?v=2.0&ak=A4749739227af1618f7b0d1b588c0e85"></script>
-<!-- ¼ÓÔØ°Ù¶ÈµØÍ¼ÑùÊ½ĞÅÏ¢´°¿Ú -->
+<!-- ï¿½ï¿½ï¿½Ø°Ù¶Èµï¿½Í¼ï¿½ï¿½Ê½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ -->
 <script type="text/javascript"
 	src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
 <link rel="stylesheet"
 	href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
-<!-- ¼ÓÔØ³ÇÊĞÁĞ±í -->
+<!-- ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½ -->
 <script type="text/javascript"
 	src="http://api.map.baidu.com/library/CityList/1.2/src/CityList_min.js"></script>
 
@@ -143,7 +143,7 @@ li {
 
 	<!-- Add Media helper (this is optional) -->
 	<script type="text/javascript" src="fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.6"></script>
-<title>µş¼ÓÂéµãÍ¼Demo</title>
+<title>å åŠ éº»ç‚¹å›¾Demo</title>
 </head>
 <body>
 	<div id="l-map"></div>
@@ -170,14 +170,14 @@ li {
 </body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
 <script type="text/javascript">
-// °Ù¶ÈµØÍ¼API¹¦ÄÜ
-var map = new BMap.Map("l-map");          // ´´½¨µØÍ¼ÊµÀı
-var point = new BMap.Point(116.633604,40.312968);  // ´´½¨µã×ø±ê
-map.centerAndZoom(point, 40);                 // ³õÊ¼»¯µØÍ¼£¬ÉèÖÃÖĞĞÄµã×ø±êºÍµØÍ¼¼¶±ğ
+//ç™¾åº¦åœ°å›¾APIåŠŸèƒ½
+var map = new BMap.Map("l-map");         // åˆ›å»ºåœ°å›¾å®ä¾‹
+var point = new BMap.Point(116.633604,40.312968); // åˆ›å»ºç‚¹åæ ‡
+map.centerAndZoom(point, 40);                 // åˆå§‹åŒ–åœ°å›¾ï¼Œè®¾ç½®ä¸­å¿ƒç‚¹åæ ‡å’Œåœ°å›¾çº§åˆ«
 map.enableScrollWheelZoom();
-map.addControl(new BMap.NavigationControl());  //Ìí¼ÓÄ¬ÈÏËõ·ÅÆ½ÒÆ¿Ø¼ş
+map.addControl(new BMap.NavigationControl());  //æ·»åŠ é»˜è®¤ç¼©æ”¾å¹³ç§»æ§ä»¶
 var myPoligons = [];
-//ÔÚµØÍ¼ÉÏÏÔÊ¾µãĞÅÏ¢
+//åœ¨åœ°å›¾ä¸Šæ˜¾ç¤ºç‚¹ä¿¡æ¯
 $(document).ready(function(){
 	$.getJSON("data_output.php?type=path&&file=<?php echo $_GET['file']?>",function(data){
 		for(var i=0;i<data.pathdata.length;i++){
@@ -199,11 +199,11 @@ $(document).ready(function(){
 				myPoligons[i].addEventListener('mouseover', function(){
 					var centerpoint = this.getCenter();
                         var hotSpot = new BMap.Hotspot(centerpoint, {text: "PCI: "+info[10]+
-																	"<br />SINRÆ½¾ùÖµ: "+info[8]+
-																	"<br />RSRPÆ½¾ùÖµ: "+info[11]+
-																	"<br />RSRQÆ½¾ùÖµ: "+info[12]+
-																	"<br />RSSIÆ½¾ùÖµ: "+info[13]+
-																	"<br />Throughput_ULÆ½¾ùÖµ: "+info[14]});
+																	"<br />SINRå¹³å‡å€¼: "+info[8]+
+																	"<br />RSRPå¹³å‡å€¼: "+info[11]+
+																	"<br />RSRQå¹³å‡å€¼: "+info[12]+
+																	"<br />RSSIå¹³å‡å€¼: "+info[13]+
+																	"<br />Throughput_ULå¹³å‡å€¼: "+info[14]});
                         map.addHotspot(hotSpot);
 	    		}); 
 				myPoligons[i].addEventListener('mouseout',function(){});
@@ -221,24 +221,24 @@ $(document).ready(function(){
 //  	} 
 //  }
 
-function callback(e)//µ¥»÷ÈÈµãÍ¼²ã
+function callback(e)//å•å‡»çƒ­ç‚¹å›¾å±‚
 {
   var customPoi = e.customPoi,
 		  str = [];
 		str.push("address = " + customPoi.address);
 		str.push("phoneNumber = " + customPoi.phoneNumber);
-        var content = '<p style="width:280px;margin:0;line-height:20px;">µØÖ·£º' + customPoi.address + '</p>';
+        var content = '<p style="width:280px;margin:0;line-height:20px;">åœ°å€ï¼š' + customPoi.address + '</p>';
         var searchInfoWindow = new BMapLib.SearchInfoWindow(map, content, {
-            title: customPoi.title, //±êÌâ
-            width: 290, //¿í¶È
-            height: 40, //¸ß¶È
-            panel : "panel", //¼ìË÷½á¹ûÃæ°å
-            enableAutoPan : true, //×Ô¶¯Æ½ÒÆ
-            enableSendToPhone: true, //ÊÇ·ñÏÔÊ¾·¢ËÍµ½ÊÖ»ú°´Å¥
+            title: customPoi.title, //æ ‡é¢˜
+            width: 290, //å®½åº¦
+            height: 40, //é«˜åº¦
+            panel : "panel", //æ£€ç´¢ç»“æœé¢æ¿
+            enableAutoPan : true, //è‡ªåŠ¨å¹³ç§»
+            enableSendToPhone: true, //æ˜¯å¦æ˜¾ç¤ºå‘é€åˆ°æ‰‹æœºæŒ‰é’®
             searchTypes :[
-                BMAPLIB_TAB_SEARCH,   //ÖÜ±ß¼ìË÷
-                BMAPLIB_TAB_TO_HERE,  //µ½ÕâÀïÈ¥
-                BMAPLIB_TAB_FROM_HERE //´ÓÕâÀï³ö·¢
+                BMAPLIB_TAB_SEARCH,   //å‘¨è¾¹æ£€ç´¢
+                BMAPLIB_TAB_TO_HERE,  //åˆ°è¿™é‡Œå»
+                BMAPLIB_TAB_FROM_HERE //ä»è¿™é‡Œå‡ºå‘
             ]
         });
 
@@ -249,7 +249,8 @@ function callback(e)//µ¥»÷ÈÈµãÍ¼²ã
 
 
 
-//»ñµÃÑÕÉ«
+
+//è·å¾—é¢œè‰²
 function getColor(number){
 	if(number <= -5 )
 		return 'blue';

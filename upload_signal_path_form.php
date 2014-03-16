@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-<title>显示路测轨迹</title>
+<title>鏄剧ず璺祴杞ㄨ抗</title>
 </head>
 <body>
 	<form action="upload_signal_path.php" method="post" enctype="multipart/form-data">
-	<p>导入路径数据表</p>
+	<p>瀵煎叆璺緞鏁版嵁琛�</p>
 	<label for="userfile">Filename:</label>
 	<input type="file" name="userfile" id="userfile" />
 	<input type="submit" value="Send File" />
