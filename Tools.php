@@ -20,7 +20,6 @@ function String2Int($str){
 	return $num_arr;
 }
 
-function testGithub(){}
 
 /******************
 *   计算方差       *
