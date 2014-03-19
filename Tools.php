@@ -61,6 +61,7 @@ function LastEffect($num){
 /*******************************
  *    凸包相关函数   *
 *******************************/
+
 /**
  * get the distance 
  * @param unknown $p1
