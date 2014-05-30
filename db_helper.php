@@ -1,6 +1,7 @@
 <?php
 require_once 'Tools.php';
 include_once 'params.php';
+include_once 'ToBaidu.php';
 /**
  * 连接数据库
  * @throws Exception
@@ -57,8 +58,6 @@ function originalinfo_upload($upfile, $people) {
 			$datetime = Empty2Zero ( $data [$col ['Date & Time']] );
 			$longitude = Empty2Zero ( $data [$col ['Longitude']] );
 			$latitude = Empty2Zero ( $data [$col ['Latitude']] );
-			if (! ($longitude && $latitude))
-				continue;
 			$gpshight = Empty2Zero ( $data [$col ['GPS Hight']] );
 			$gpsspeed = Empty2Zero ( $data [$col ['GPS Speed']] );
 			$gpssatellites = Empty2Zero ( $data [$col ['GPS Satellites']] );
@@ -72,6 +71,9 @@ function originalinfo_upload($upfile, $people) {
 			$servingcellrssi = Empty2Zero ( $data [$col ['Serving Cell RSSI(dBm)']] );
 			$throughputul = Empty2Zero ( $data [$col ['PDCP Throughput UL(kbit/s)']] );
 			$throughputdl = Empty2Zero ( $data [$col ['PDCP Throughput DL(kbit/s)']] ) * $people;
+			
+			if (! ($longitude && $latitude && $servingcellpci))
+				continue;
 			
 			$sqlstr1 = "INSERT into originalinfo values (
 			NULL,
@@ -93,7 +95,7 @@ function originalinfo_upload($upfile, $people) {
 			'$throughputdl')";
 			$conn->query ( $sqlstr1 ) or die ( $conn->error );
 		}
-		echo 'upload complete1';
+		echo 'upload complete';
 	} else
 		echo "upload error";
 	fclose ( $handle );
@@ -136,7 +138,6 @@ function get_detial_data($longi, $lati) {
 	$data = $result->fetch_assoc ();
 	$infos = $data ['originalid'];
 	$originalid_arr = String2Int ( $infos );
-	$query_string = 'select * from originalinf where id in (';
 	$id_string = implode ( ',', $originalid_arr );
 	$data_arr = $conn->query ( "select * from originalinfo where id in ($id_string)" );
 	$infos = array ();
@@ -318,5 +319,69 @@ function delete_basestation($stationID) {
 		throw new Exception ( '删除基站失败' );
 	}
 }
+/*
+ * get series of points(lng,lat) belong to this collector, of which the id start from the id of the last point
+ * @param {Number} $collector: the id of the collector
+ * @param {Number} $id_of_last_point: select points from originalinfo where id > id_of_last_point
+ * @returns {Array} $row: A Series of points
+ */
+function get_more_location_of_collector($collector,$id_of_last_point){
+	$points = array();
+	$co = sql_query("SELECT * FROM collector WHERE id='$collector'")->fetch_assoc();
+	$origin_ids = String2Int($co['originalid']);
+	foreach($origin_ids as $id){
+		if($id>$id_of_last_point){
+			array_push($points,sql_query("SELECT id,DateTime,Longitude,Latitude FROM originalinfo WHERE id=$id")->fetch_assoc());
+		}
+	}
+	usort($points,function($a,$b){
+		$atime = strtotime($a['DateTime']);
+		$btime = strtotime($b['DateTime']);
+		if ($atime == $btime) return 0;
+		return ($atime > $btime) ? 1: -1;
+	});
+	return $points;
+}
 
+
+/**
+ * 根据用户id获取该用户在originalinfo表中的数据
+ * Enter description here ...
+ * @param $userId
+ */
+function  getUserPath() {
+	$userPathArr = array();
+	$conn = db_connect ();
+	echo "$sqlString";
+	$result = $conn->query ("select * from collector");
+	while($row = $result->fetch_assoc ()){
+		$userPath[id] = $row['id'];
+		$originalinfoArray = array();
+		$arr = explode('#', $row['originalid']);
+		for($i=0;$i<count($arr);$i++) {
+			$originalId = $arr[$i];
+			$result1 = $conn->query ( "select * from originalinfo where id= $originalId")->fetch_assoc ();
+			$baidupoint = ToBaidu($result1['Longitude'],$result1['Latitude']);
+			$result2['Longitude'] = $baidupoint['lng'];
+			$result2['Latitude'] = $baidupoint['lat'];
+			$result2['PCC_RANK1_SINR'] = $result1['PCC_RANK1_SINR'];
+			$originalinfoArray[$i] = $result2;
+		}
+		$userPath[points]= $originalinfoArray;
+		array_push($userPathArr, $userPath);
+	}
+	return $userPathArr;
+}
+
+/*
+ * get collectors
+ */
+function get_collectors(){
+	$conn = db_connect ();
+	$result = $conn->query ( "SELECT * FROM collector" );
+	for($i = 0; $row = $result->fetch_assoc (); $i ++) {
+		$infos [$i] = $row;
+	}
+	return $infos;
+}
 ?>

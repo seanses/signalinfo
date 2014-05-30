@@ -41,7 +41,7 @@ function CalcVariance($id_arr,$count,$ave,$what){
 }
 
 /*******************************
-*   取小数点后一位有效数组     *
+*   取小数点后一位有效数据     *
 *******************************/
 function LastEffect($num){
 	$pow = 0;

@@ -67,13 +67,13 @@
 				echo "<td>" . $result[$i]['PCI3'] . "</td>";
 				echo "<td>" . $result[$i]['Degree5'] . "</td>";
 				echo "<td>" . $result[$i]['Degree6'] . "</td>";
-				$ID = $result[$i]['Id'];
+				$ID = $result[$i]['id'];
 				echo "<td> <a href=\"editBS_form.php?operation=EDIT&id=$ID\">edit</a>
         			 <a href=\"editBS_form.php?operation=DELETE&id=$ID\">delete</a><td></tr>";
 		 }
          ?>
 		</table>
-            <a href="editBS_form.php?operation=ADD">add a new station</a>
+            <a href="editBS_form.php?operation=ADD">add a new station(添加基站)</a>
         </form>   
       </div>
       </div>

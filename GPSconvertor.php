@@ -9,6 +9,6 @@ function GPS2Grid($lng,$lat,$accuracy = 30)
 	$accuracy_lng = LastEffect(abs($accuracy*36/($_config['params']['GREAT_CIRCLE_PERIMETER'])/cos(deg2rad($lat))/100));
 	$accuracy_lat = LastEffect(abs($accuracy*36/($_config['params']['GREAT_CIRCLE_PERIMETER'])/100));	
 	
-	return array("lng"=>floor($lng/$accuracy_lng)*$accuracy_lng,"lat"=>floor($lat/$accuracy_lat)*$accuracy_lat);
+	return array("lng"=>floor($lng/$accuracy_lng)*$accuracy_lng + $accuracy_lng/2, "lat"=>floor($lat/$accuracy_lat)*$accuracy_lat + $accuracy_lat/2); //points in the area of this grid should be converted to centre of the grid
 }
 ?>

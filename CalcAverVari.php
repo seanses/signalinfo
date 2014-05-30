@@ -7,6 +7,7 @@ include_once 'params.php';
 
 set_time_limit(0);
 
+$minid = ($_GET["minid"] === null)? 0:$_GET["minid"]; //start calculating from this original(id)
 
 $result = mysql_query("SELECT 
 			id,
@@ -20,13 +21,15 @@ $result = mysql_query("SELECT
 			Serving_Cell_RSSI,
 			PDCP_Throughput_UL,
 			PDCP_Throughput_DL
-			FROM originalinfo") or die("Invalid query of selecting all data from original: " . mysql_error());
+			FROM originalinfo WHERE id>='$minid'") or die("Invalid query of selecting all data from original: " . mysql_error());
 
 while($row = mysql_fetch_array($result))
 {
 	$gps = GPS2Grid($row['Longitude'],$row['Latitude']);
 	$pro_lng = $gps['lng'];
 	$pro_lat = $gps['lat'];
+	if(!($pro_lng && $pro_lat && $row['Serving_Cell_PCI']))
+		continue;
 	
 	$_exit = mysql_query("SELECT * FROM processedinfo WHERE  
 			Longitude = '$pro_lng' 
@@ -41,7 +44,7 @@ while($row = mysql_fetch_array($result))
 		$baidu_arr = ToBaidu($pro_lng,$pro_lat);
 		$baidu_lng = Empty2Zero($baidu_arr['lng']);
 		$baidu_lat = Empty2Zero($baidu_arr['lat']);
-		if($baidu_lng==0||$baidu_lat==0||Empty2Zero($row['Serving_Cell_PCI'])==0)
+		if(!($baidu_lng && $baidu_lat))
 			continue;
 		
 		mysql_query("INSERT INTO processedinfo VALUES (

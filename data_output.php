@@ -7,7 +7,7 @@ $data = array (
 );
 if ($_GET ['type']) {     		 		//get the type of data which browser want
 	$output_type = $_GET ['type']; 
-	$data['pciNum'] = count(get_PCI_list());  //write the num of pci for pages to get
+	//$data['pciNum'] = count(get_PCI_list());  //write the num of pci for pages to get
 	// loading original data
 	if ($output_type == 'original') {
 		$data ['originaldata'] = originalinfo_get ();
@@ -20,7 +20,10 @@ if ($_GET ['type']) {     		 		//get the type of data which browser want
 			// $data['detaildata'] = get_detial_data(116.643098, 40.315050);
 		} else
 			$data ['error'] = 1;
-	} 	
+	} 
+	else if($output_type == 'userPath') {
+		$data['userPath'] = getUserPath();
+	}	
 	// loading  the data of csv file
 	else if ($output_type == "path") {
 		if ($_GET ["file"]) {
@@ -53,19 +56,11 @@ if ($_GET ['type']) {     		 		//get the type of data which browser want
 					$servingcellrsrq = Empty2Zero($data[$col['Serving Cell RSRQ(dB)']]);
 					$servingcellrssi = Empty2Zero($data[$col['Serving Cell RSSI(dBm)']]);
 					$throughput = Empty2Zero($data[$col['PDCP Throughput UL(kbit/s)']]);
-					$data=array($datetime,$longitude,$latitude,$gpshight,$gpsspeed,$gpssatellites,$gpsheading,
-								$pccaveragesinr,$pccrank1sinr,$pccrank2sinr1,$servingcellpci,$servingcellrsrp,$servingcellrsrq,$servingcellrssi,$throughput);
+					$data=array($datetime,$longitude,$latitude,$gpshight,$gpsspeed,$gpssatellites,$gpsheading,$pccaveragesinr,
+								$pccrank1sinr,$pccrank2sinr1,$servingcellpci,$servingcellrsrp,$servingcellrsrq,$servingcellrssi,$throughput);
 					$data_array [$i] = $data;
 				}
 			}
-			// for($i = 0; $data = fgetcsv ( $handle, 1000, "," ); $i ++) {
-				// foreach ( $data as &$column ) {
-					// if (empty ( $column ))
-						// $column = 'NULL';
-					// $column = trim ( $column );
-				// }
-				// $data_array [$i] = $data;
-			// }
 			$data ['pathdata'] = $data_array;
 			fclose ( $handle );
 		}
@@ -84,6 +79,21 @@ if ($_GET ['type']) {     		 		//get the type of data which browser want
 	//loading the data of base station 
 	else if($output_type == "baseStation"){
 		$data['baseStation'] = getBasestation();
+	}
+	
+	//get a series of points of collector
+	else if($output_type == "collector"){
+		$data['collector'] = array();
+		$id_of_last_point = $_GET['last'];
+		$collectors = get_collectors();
+		foreach($collectors as $co){
+			$coinfo['id'] = $co['id'];
+			$coinfo['username'] = $co['UserName'];
+			$coinfo['Llongitude'] = $co['LastLongitude'];
+			$coinfo['Llatitude'] = $co['LastLatitude'];
+			$coinfo['points'] = get_more_location_of_collector($co['id'],$id_of_last_point);
+			array_push($data['collector'],$coinfo);
+		}
 	}
 } else
 	$data ['error'] = 1;

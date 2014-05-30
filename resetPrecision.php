@@ -1,3 +1,8 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
 <?php
 require_once 'MysqlConnection.php';
 include_once 'params.php';
@@ -12,6 +17,8 @@ else{
 	$str = str_replace('$_config[\'params\'][\'ACCURACY_DEFAULT\'] = ' . $_config['params']['ACCURACY_DEFAULT'] ,'$_config[\'params\'][\'ACCURACY_DEFAULT\'] = ' . $_POST["precision"],$str);
 	file_put_contents("params.php",$str);
 	file_get_contents("http://localhost/signalinfo/CalcAverVari.php");
-	echo "重新生成数据库成功". "<a href=\"http://localhost/signalinfo/index.html\">回到主页</a>";
+	echo "重新生成数据库成功     ". "<a href=\"http://localhost/signalinfo/index.html\">回到主页</a>";
 }
 ?>
+</body>
+</html>

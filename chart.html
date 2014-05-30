@@ -15,7 +15,15 @@
 </body>
 </html>
 <script type="text/javascript">
-var chartdata = $("#chartdata",parent.document).val();
+
+$(function(){
+	todo();
+	function next(){
+		//setTimeout(todo,10000);
+	}
+	function todo(){
+
+var chartdata = $("#chartdata",parent.document).val();		
 var okdata = JSON.parse(chartdata);
 var chart;
 $(function(){
@@ -237,4 +245,10 @@ function addPlotBand(){
 		}
 	}
 }
+
+			 next();
+	              }
+});
+
+
 </script>

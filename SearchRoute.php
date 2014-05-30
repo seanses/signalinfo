@@ -2,6 +2,7 @@
 require_once 'GPSconvertor.php';
 require_once 'MysqlConnection.php';
 require_once 'Tools.php';
+require_once 'file_helper.php';
 include_once 'params.php';
 
 class Point{
@@ -40,14 +41,20 @@ $points_tput_ave = array();
 $points_tput_var = array();
 $points_tput_scatter = array();
 $points_band = array();
+$hashkeys = array();
+
 $dit1 = $dit2 = $pci = 0;
+$longest_dit = 0;
 foreach($data as $d){
 	$gps = GPS2Grid($d['lng'],$d['lat']);
 	$lng = $gps['lng'];
 	$lat = $gps['lat'];
+	$longest_dit = $d['dit'];
 	$result = mysql_query("SELECT * FROM baidubasedinfo") or die("Invalid query of selecting * from baidubased: " . mysql_error());
 	while($row = mysql_fetch_array($result)){
-		if(distance($lng,$lat,$row['Longitude'],$row['Latitude'])<=$_config['params']['ACCURACY_DEFAULT']){
+		$key = $row['Longitude'] . $row['Latitude']; //the hash key for every point
+		if(!in_array($key,$hashkeys) && distance($lng,$lat,$row['Longitude'],$row['Latitude'])<=20){
+			array_push($hashkeys,$key);
 			//Add Average values and Variance values to arrays
 			array_push($points_sinr_ave,new Point($d['dit'],floatval($row['PCC_RANK1_SINR_AVERAGE']),$row['Longitude'],$row['Latitude']));
 			array_push($points_sinr_var,new Point($d['dit'],floatval($row['PCC_RANK1_SINR_VARIANCE']),$row['Longitude'],$row['Latitude']));
@@ -85,5 +92,9 @@ foreach($data as $d){
 }
 array_push($points_band,new Band($dit1,$dit2,$pci));
 array_shift($points_band);
-echo json_encode(array($points_sinr_ave,$points_sinr_var,$points_sinr_scatter,$points_rsrp_ave,$points_rsrp_var,$points_rsrp_scatter,$points_tput_ave,$points_tput_var,$points_tput_scatter,$points_band));
+
+//调用file_helper中的函数，由sinr平均值-距离曲线生成sinr平均值-时间曲线
+$sinrave_time_file = convert_sinrave_distance_to_sinrave_time_csvfile($points_sinr_ave,$longest_dit);
+
+echo json_encode(array($points_sinr_ave,$points_sinr_var,$points_sinr_scatter,$points_rsrp_ave,$points_rsrp_var,$points_rsrp_scatter,$points_tput_ave,$points_tput_var,$points_tput_scatter,$points_band,$sinrave_time_file));
 ?>

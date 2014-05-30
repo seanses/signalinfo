@@ -49,32 +49,33 @@
 		</div>
 		<div id="form-mes" style="margin-left: 90px;">
 		<div class="row col-xs-4" style="margin-right: 10px;">
-			<form action="original_data_import.php" method="post"
-				enctype="multipart/form-data">
+			<form action="original_data_import.php" method="post" enctype="multipart/form-data">
 				<h3>导入原始数据</h3>
 				<div class="form-group" style="margin-top: 20px;">
-					<label for="userfile">选择导入文件:</label> <input type="file"
-						name="userfile" id="userfile" /> <label for="people">请选择用户数:</label>
-					<select id="people" name="people" class="form-control">
-						<option value=1 selected="selected">1</option>
-						<option value=2>2</option>
-						<option value=3>3</option>
-						<option value=4>4</option>
-						<option value=5>5</option>
-						<option value=0>更多</option>
-					</select>
+					<label for="userfile">选择导入文件:</label> 
+					<input type="file" name="userfile" id="userfile" />
+					<div id="divofpeople">
+						<label for="people">请选择用户数:</label>
+						<select id="people" name="people" class="form-control">
+							<option value=1 selected="selected">1</option>
+							<option value=2>2</option>
+							<option value=3>3</option>
+							<option value=4>4</option>
+							<option value=5>5</option>
+							<option value=0>更多</option>
+						</select>
+					</div>
 					<p class="help-block">请选择想要上传的文件,选择上传文件的用户数，并点击上传按钮</p>
 					<input type="submit" class="btn btn-primary" value="上传" />
 				</div>
 			</form>
 		</div>
 		<div class="row col-xs-4" style="margin-right: 10px;">
-			<form action="resetPrecision.php" method="post"
-				enctype="multipart/form-data">
+			<form action="resetPrecision.php" method="post" enctype="multipart/form-data">
 				<h3>修改数据精度</h3>
-				<div class="form-group">
-					<label for="people">栅格精度:</label> <select id="precision"
-						name="precision" class="form-control">
+				<div id="divofprecision" class="form-group">
+					<label for="people">栅格精度:</label> 
+					<select id="precision" name="precision" class="form-control">
 						<option value=0 selected="selected"></option>
 						<option value=5>5</option>
 						<option value=10>10</option>
@@ -82,9 +83,10 @@
 						<option value=30>30</option>
 						<option value=0>其他</option>
 					</select>
-					<p class="help-block">请选择合适的精度</p>
-					<input type="submit" class="btn btn-primary" value="修改" />
 				</div>
+				<p class="help-block">请选择合适的精度</p>
+				<input type="submit" class="btn btn-primary" value="修改" />
+				
 			</form>
 		</div>
 		<div class="row">
@@ -92,7 +94,7 @@
 		<div class="form-group">
 		<label>点击按钮清除所有数据库中的数据</label>
 		<br />
-			<button type="submit" class="btn btn-primary" onclick="window.location.href('data_clear.php')">清除数据</button>
+			<button type="submit" class="btn btn-primary" onclick="window.location.href='data_clear.php';">清除数据</button>
 		</div>
 		</div>
 		</div>
@@ -107,22 +109,31 @@
 	</div>
 
 
-	<script type="text/javascript">
-		$(function(){
-			$("#precision option:first").text("现在精度为:"+<?php include_once 'params.php'; echo $_config['params']['ACCURACY_DEFAULT']; ?>);
+<script type="text/javascript">
+$(function(){
+	$("#precision option:first").text("现在精度为:"+<?php include_once 'params.php'; echo $_config['params']['ACCURACY_DEFAULT']; ?>);
 	$("select").change(function(){
 		if($(this).attr("id")=="people"){
 			if($("#people").val()==0){
-				$("#divofpeople").html("<label for='people'>用户数:</label> <input name='people' type='text' />");
+				$("#divofpeople").html("<label for='people'>用户数:</label> <input name='people' type='text' class='form-control' />");
 			}
 		}
 		if($(this).attr("id")=="precision"){
 			if($("#precision").val()==0){
-				$("#divofprecision").html("<label for='people'>栅格精度:</label> <input name='precision' type='text' />");
+				$("#divofprecision").html("<label for='people'>栅格精度:</label> <input name='precision' type='text' class='form-control' />");
 			}
 		}
 	});
+	$("form").submit(function(e){
+		var re = /^[0-9]*[1-9][0-9]*$/;
+		if(!(re.test($(".form-control",this).val()))){
+			e.preventDefault();
+			alert("必须是正整数!");
+		}
+	});
 });
+
+
 </script>
 </body>
 </html>

@@ -12,7 +12,6 @@ body, html, #allmap {
 #l-map {
 	height: 100%;
 	width: 100%;
-	float: left;
 	border-right: 2px solid #bcbcbc;
 }
 
@@ -21,12 +20,18 @@ body, html, #allmap {
 	width: 21%;
 	float: left;
 }
+#color{
+ position:float;
+ width:30%;
+}
 </style>
 <link rel="stylesheet" href="css/jquery.fancybox.css" type="text/css"
 	media="screen" />
+
 <title>index</title>
 </head>
 <body>
+    <span style="position:absolute;z-index:1"><img id="color" src="img/color.jpg"/></span>
 	<div id="l-map"></div>
 	<!-- <div id="r-result" style="overflow:scroll" ></div> -->
 	<div id="data">
@@ -35,13 +40,12 @@ body, html, #allmap {
 	<div id="information"></div>
 </body>
 <!-- 加载js文件 -->
-<script type="text/javascript"
-	src="http://api.map.baidu.com/api?v=2.0&ak=YCwNZAoPRPGry3Gypi80S1ZL"></script>
-<script type="text/javascript"
-	src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=YCwNZAoPRPGry3Gypi80S1ZL"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
 <script src="js/jquery-1.10.2.min.js"></script>
 <script src="js/latlon.js"></script>
 <script src="js/jquery.fancybox.pack.js"></script>
+<script src="js/jsMapTools.js"></script>
 
 </html>
 <script type="text/javascript">
@@ -51,7 +55,7 @@ var jq = $.noConflict();
 var map = new BMap.Map("l-map");          // 创建地图实例
 var point = new BMap.Point(116.633604,40.312968);  // 创建点坐标
 var circle_color;
-var myPoligons = [];
+var myPoints = [];
 var regionoverlay = [];
 var polygonList = []
 var pciNumList = [];
@@ -64,16 +68,82 @@ map.enableScrollWheelZoom();
 /**************************
 *    start  zhangyichi    *
 **************************/
-
 ////draw the imformation in the database
 jq(document).ready(function(){
+	//draw cell coverage area on the map
 	jq.getJSON("data_output.php?type=region", function(data) {
 		for(var i = 0; i < data.regiondata.length; i++) {
 			addPCIRegion(data.regiondata[i].pointList,data.regiondata[i].color,data.regiondata[i].pci);	
 		}
 	});
 	
-    //draw the baseStation 
+    
+	
+	//draw original data on the map
+	function refreshpoints(){
+		for(p in myPoints)	map.removeOverlay(p);
+		myPoints = [];
+		jq.getJSON("data_output.php?type=original",function(data){
+			for(var i=0;i<data.originaldata.length;i++){
+				circle_color = 	getColor(data.originaldata[i].PCC_RANK1_SINR_AVERAGE);
+				var centerpoint = new BMap.Point(data.originaldata[i].Longitude,data.originaldata[i].Latitude);
+				var circle = new BMap.Circle(centerpoint,1.5,{strokeColor:circle_color, strokeWeight:3, strokeOpacity: 1, fillColor:circle_color, fillOpacity:1});
+				myPoints.push(circle);
+				map.addOverlay(circle);
+			}
+			for(var i =0; i <data.originaldata.length; i ++) {
+				(function(){
+					var oridata = data.originaldata[i];
+					
+					myPoints[i].addEventListener('click', function(){
+						var longi = this.getCenter().lng;
+						var lati = this.getCenter().lat;
+						var p = this;
+				
+						jq.get("data_output.php?type=detail&longi="+ longi +"&lati="+lati,function(jsonback,status){
+							var sContent;
+
+							var back = JSON.parse(jsonback);
+							sContent ="<div><button onclick='deletePoint("+oridata.Gridid+");' />删除这个点</button></div>"+"<div style='overflow: auto; height: 250px'><h4 style='margin:0 0 5px 0;padding:0.2em 0'>详细信息</h4>" +
+										 "<table border='1';text-align='center'><tr><th>时间</th><th>经度</th><th>纬度</th><th>PCI</th><th>SINR(dB)</th><th>RSRP(dB)</th><th>下行吞吐量(Kbps)</th></tr>";
+							   
+							for(var j=0;j<back.detaildata.length;j++){
+								sContent +="<tr><td align='center'>"+back.detaildata[j].DateTime+"</td>"+
+								"<td align='center'>"+back.detaildata[j].Longitude+"</td>"+
+								"<td align='center'>"+back.detaildata[j].Latitude+"</td>"+
+								"<td align='center'>"+back.detaildata[j].Serving_Cell_PCI+"</td>"+
+								"<td align='center'>"+back.detaildata[j].PCC_RANK1_SINR+"</td>"+
+								"<td align='center'>"+back.detaildata[j].Serving_Cell_RSRP+"</td>"+
+								"<td align='center'>"+back.detaildata[j].PDCP_Throughput_DL+"</td></tr>";
+							}
+							sContent +="</table><div>";
+							   
+							var opts = {width:1200}    // 信息窗口宽度
+							   
+							var infoWindow = new BMap.InfoWindow(sContent,opts);
+							
+							var center = p.getCenter();
+							map.openInfoWindow(infoWindow,center); //开启信息窗口	 
+						  
+						});
+					});
+											
+					var centerpoint = new BMap.Point(oridata.Longitude,oridata.Latitude);
+					var hotSpot = new BMap.Hotspot(centerpoint, {text: "PCI: "+oridata.PCI+
+													"<br />SINR平均值: "+oridata.PCC_RANK1_SINR_AVERAGE+
+													"dB<br />RSRP平均值: "+oridata.SERVING_CELL_RSRP_AVERAGE+
+													"dB<br />下行吞吐量平均值: "+oridata.PDCP_Throughput_DL_AVERAGE+"Kbps",
+													offsets:[50,50,50,50]});
+					map.addHotspot(hotSpot);	
+				})();
+			}	
+		});
+		//setTimeout(refreshpoints,10000);
+	}
+	
+	refreshpoints();
+	
+	//draw the baseStation 
  	jq.getJSON("data_output.php?type=baseStation",function(data){ 	
 	    for(var i=0; i<data.baseStation.length; i++){
 		    var baseStationData = {
@@ -93,73 +163,44 @@ jq(document).ready(function(){
 		    };
 		    drawBaseStation(baseStationData);
 	    }
-		}); 
-	 jq.getJSON("data_output.php?type=original",function(data){
-	    	for(var i=0;i<data.originaldata.length;i++){
-	    		circle_color = 	getColor(data.originaldata[i].PCC_RANK1_SINR_AVERAGE);
-	    		var centerpoint = new BMap.Point(data.originaldata[i].Longitude,data.originaldata[i].Latitude);
-	    		var circle = new BMap.Circle(centerpoint,1.5,{strokeColor:circle_color, strokeWeight:3, strokeOpacity: 1, fillColor:circle_color, fillOpacity:1});
-	    		myPoligons.push(circle);
-	    		map.addOverlay(circle);
-	    		}
-	    	for(var i =0; i <data.originaldata.length; i ++) 
-				{
-	    				(function(){
-	    					var json = data.originaldata[i];
-
-							
-	    					myPoligons[i].addEventListener('click', function(){
-	    		 			var longi = this.getCenter().lng;
-	    					var lati = this.getCenter().lat;
-							var p = this;
-							
-	    						    
-				//				window.open("detail_data_form.php?longi="+ longi +"&lati="+lati);
-								
-								 jq.get("data_output.php?type=detail&longi="+ longi +"&lati="+lati,function(jsonback,status){
-                                 //  alert("数据：" + jsonback + "\n状态：" + status);
-								   var sContent;
-
-								   var back = JSON.parse(jsonback);
-								   sContent ="<div><button onclick='deletePoint("+json.Gridid+");' />删除这个点</button></div>"+"<div><h4 style='margin:0 0 5px 0;padding:0.2em 0'>详细信息</h4>" +
-								             "<table border='1';text-align='center'><tr><th>时间</th><th>经度</th><th>纬度</th><th>PCI</th><th>SINR(dB)</th><th>RSRP(dB)</th><th>下行吞吐量(Kbps)</th></tr>";
-								   
-								   for(var j=0;j<back.detaildata.length;j++){
-								   sContent +="<tr><td align='center'>"+back.detaildata[j].DateTime+"</td>"+
-								   "<td align='center'>"+back.detaildata[j].Longitude+"</td>"+
-								   "<td align='center'>"+back.detaildata[j].Latitude+"</td>"+
-								   "<td align='center'>"+back.detaildata[j].Serving_Cell_PCI+"</td>"+
-								   "<td align='center'>"+back.detaildata[j].PCC_RANK1_SINR+"</td>"+
-								   "<td align='center'>"+back.detaildata[j].Serving_Cell_RSRP+"</td>"+
-								   "<td align='center'>"+back.detaildata[j].PDCP_Throughput_DL+"</td></tr>";
-								   }
-								   sContent +="</table><div>";
-								   
-								   var opts = {width:1200}    // 信息窗口宽度
-                                   
-								   var infoWindow = new BMap.InfoWindow(sContent,opts);
-							        //var infoWindow = new BMap.InfoWindow("<h4 style='margin:0 0 5px 0;padding:0.2em 0'>详细信息</h4>"+sContent, opts);  // 创建信息窗口对象
-                                   var center = p.getCenter();
-							       map.openInfoWindow(infoWindow,center); //开启信息窗口	 
-								   
-								   });
-	    					}); 
-	    					myPoligons[i].addEventListener('mouseover', function(){
-								
-								var centerpoint = this.getCenter();
-                                var hotSpot = new BMap.Hotspot(centerpoint, {text: "PCI: "+json.PCI+
-																			"<br />SINR平均值: "+json.PCC_RANK1_SINR_AVERAGE+
-																			"dB<br />RSRP平均值: "+json.SERVING_CELL_RSRP_AVERAGE+
-																			"dB<br />下行吞吐量平均值: "+json.PDCP_Throughput_DL_AVERAGE+"Kbps"});
-                                map.addHotspot(hotSpot);
-	    					}); 
-	    					myPoligons[i].addEventListener('mouseout', function(){
-	    					}); 
-	    				})();
-	    	    }	
-	    });
-	});
+	}); 
 	
+    
+	//draw collectors on the map
+	function resetMK(){
+		jq.getJSON("data_output.php?type=collector&last=-1",function(data){
+			for(co in data.collector){
+				var myIcon = new BMap.Icon("img/collector.png", new BMap.Size(43, 33), {    
+					imageOffset: new BMap.Size(0, 0)    //图片的偏移量。为了是图片底部中心对准坐标点。
+				});
+				//window.open(myIcon.imageUrl);
+				var carstart = new BMap.Point(data.collector[co].Llongitude,data.collector[co].Llatitude);
+				var carMk = new BMap.Marker(carstart,{icon:myIcon});
+				carMk.setLabel(new BMap.Label(data.collector[co].username,{offset:new BMap.Size(20,-18)}));
+				map.addOverlay(carMk);
+			}
+		});
+		// setTimeout(function(){
+			// resetMK();
+		// },10000);
+	}
+	
+	resetMK();
+});
+
+/*
+ * 定时刷新collector位置 
+ */
+// function resetMkPoint(i,len,pts,carMk){
+	// carMk.setPosition(pts[i]);
+	// if(i < len){
+		// setTimeout(function(){
+			// i++;
+			// resetMkPoint(i,len,pts,carMk);
+		// },100);
+	// }
+// }
+
 /**
  * 绘制region
  */
@@ -204,27 +245,7 @@ function clearRegion(){
 	regionoverlay=[];
 }
 
-//获得颜色
-function getColor(number){
-	if(number <= -5 )
-		return 'blue';
-	else if(number >-5&& number<=0 )
-		return '#4169E1';
-	else if(number >0&& number<=5 )
-        return '#00FFFF';	
-	else if(number >5&& number<=10 )
-        return '#00FF00';	
-	else if(number >10&& number<=15 )
-        return '#FFFF00';
-	else if(number >15&& number<=20 )
-        return '#FA8072';	
-	else if(number >20&& number<=25 )
-        return '#FF4500';	
-	else if(number >25&& number<=30 )
-        return 'red';
-	else
-		return '#DC143C';
-}
+
 //删除点
 function deletePoint(grid){
 	jq.get("deletePoint.php?grid="+grid,function(data,status){
@@ -241,7 +262,8 @@ function deletePoint(grid){
 *    start  xiaodi        *
 **************************/
 
-
+//封装一条路径中的一个点
+//lng-经度 lat-纬度 dit-与起点的距离
 function OneStep(lng,lat,dit){
 	this.lng = lng;
 	this.lat = lat;
@@ -262,6 +284,10 @@ function openchartcallback(){
 		'height'        		: 1000,
 		'autoScale' : false
 	});
+}
+
+function exportcsvfile(){
+	window.open(JSON.parse(jq("#chartdata").val())[10]);
 }
 
 function findMids(p1,p2,d0){
@@ -343,24 +369,31 @@ var options = {
 		<!-- document.getElementById("r-result").innerHTML = path.length + "<br />" + res.getPlan(0).getRoute(0).getDistance(false) + "<br />" + str.join("<br/>"); -->
 		
 		var steps_json = JSON.stringify(steps);
-		jq.post("SearchRoute.php",
-		{
-			data: steps_json
-		},
-		function(data,status){
-			if(status=="success"){
-				jq('#chartdata').val(data);
+		
+		function searchP(){
+			jq.post("SearchRoute.php",
+			{
+				data: steps_json
+			},
+			function(data,status){
+				if(status=="success"){
+					jq('#chartdata').val(data);
+				
+				}else{
+					alert("Fail to fetch data.");
+				}
+			});
 			
-			}else{
-				alert("Fail to fetch data.");
-			}
-		});
+			//setTimeout(searchP,300000);
+		}
+		
+		searchP();
+		
 	}
 };
 var driving = new BMap.DrivingRoute(map, options);
-<!-- var p1 = new BMap.Point(116.636086,40.307333); -->
-<!-- var p2 = new BMap.Point(116.645186,40.314815); -->
-<!-- driving.search(p1, p2); -->
+
+
 
 /**************************
 *    end    xiaodi        *
@@ -383,8 +416,9 @@ function Sector1(point2, radius, sDegree, eDegree, strokeColour, strokeWeight, S
     }
     points.push(point2);
     var polygon = new BMap.Polygon(
-   	    points
-    , {strokeColor:strokeColour, strokeWeight:strokeWeight, strokeOpacity:Strokepacity, fillColor: fillColour, fillOpacity:fillOpacity});
+		points, 
+		{strokeColor:strokeColour, strokeWeight:strokeWeight, strokeOpacity:Strokepacity, fillColor: fillColour, fillOpacity:fillOpacity}
+	);
     
     return polygon;
 }
@@ -402,18 +436,18 @@ function EOffsetBearing(point3, dist, bearing) {
 
 function Median(point,radius,start,end)
 {
-var middleangle =(start+(end-start)/2);
-var middlepoint = EOffsetBearing(point,radius/2,middleangle);
-return middlepoint;
+	var middleangle =(start+(end-start)/2);
+	var middlepoint = EOffsetBearing(point,radius/2,middleangle);
+	return middlepoint;
 }
 
 function moveon_out(polygon,station,PCI,middlepoint){
 
-polygon.addEventListener("mouseover",function(){map.addOverlay(Label);});
+	polygon.addEventListener("mouseover",function(){map.addOverlay(Label);});
 
-polygon.addEventListener("mouseout",function(){map.removeOverlay(Label);});  
-var Label = new BMap.Label("<b>"+station+"</b></br>PCI:"+PCI+"</br>",{position:middlepoint});  //new BMap.Point(x,y)
-Label.setStyle({"z-index":"999999", "padding": "10px","width": "140px","border": "1px solid #ccff00"}); 
+	polygon.addEventListener("mouseout",function(){map.removeOverlay(Label);});  
+	var Label = new BMap.Label("<b>"+station+"</b></br>PCI:"+PCI+"</br>",{position:middlepoint});  //new BMap.Point(x,y)
+	Label.setStyle({"z-index":"999999", "padding": "10px","width": "100px","border": "1px solid #ccff00"}); 
 }
 
 /**
@@ -421,6 +455,21 @@ Label.setStyle({"z-index":"999999", "padding": "10px","width": "140px","border":
  */
 function drawBaseStation(baseStationData){	
 	var point = new BMap.Point(baseStationData.Longitude,baseStationData.Latitude);
+	
+	var opts = {
+		position : point,    // 指定文本标注所在的地理位置
+		//offset   : new BMap.Size(30, -30)    //设置文本偏移量
+      }
+    var label = new BMap.Label(baseStationData.Name, opts);  // 创建文本标注对象
+	label.setStyle({
+		 color : "blue",
+		 fontSize : "20px",
+		 height : "20px",
+		 lineHeight : "20px",
+		 fontFamily:"微软雅黑",
+		 borderColor : "#ffff00"
+	 });
+    map.addOverlay(label);   
 	
 	var polygon1 = Sector1(point,baseStationData.Radius,baseStationData.Degree1,baseStationData.Degree2, "#ffff00", 3, 0.5, "#00ff00", 0.5);
 	map.addOverlay(polygon1);
