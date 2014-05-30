@@ -20,6 +20,7 @@ function String2Int($str){
 	return $num_arr;
 }
 
+
 /******************
 *   计算方差       *
 ******************/
@@ -60,6 +61,7 @@ function LastEffect($num){
 /*******************************
  *    凸包相关函数   *
 *******************************/
+
 /**
  * get the distance 
  * @param unknown $p1
